@@ -25,6 +25,14 @@ export type PracticalStation = {
   checks: string[];
 };
 
+export type LibraryArticle = {
+  id: string;
+  category: string;
+  title: string;
+  content: string;
+};
+
+
 export type ProgressState = {
   bestScore: number;
   answered: number;
@@ -41,6 +49,9 @@ export const topics: StudyTopic[] = [
   { id: "math", name: "Math & estimating", short: "Math", description: "Calculate areas, coverage, coats, waste, scaled dimensions, and multi-component mix quantities.", accent: "teal" },
   { id: "drawings", name: "Drawings, tools & glazing", short: "Tools", description: "Read plans and work orders, select hand and power tools, maintain equipment, and handle basic glazing tasks.", accent: "yellow" },
   { id: "transit", name: "Transit job scenarios", short: "Job site", description: "Plan safe work around active public facilities, protect operations, communicate hazards, and leave a clean work area.", accent: "pink" },
+  { id: "defects", name: "Advanced troubleshooting", short: "Defects", description: "Identify and resolve complex coating failures, such as alligatoring, blistering, blushing, and holidays.", accent: "orange" },
+  { id: "industrial", name: "Industrial coatings", short: "Industrial", description: "Work with high-performance protective systems like two-component epoxies and polyurethanes.", accent: "cobalt" },
+  { id: "prep-standards", name: "Surface prep standards", short: "Standards", description: "Master SSPC/NACE definitions for solvent, hand tool, power tool, and abrasive blast cleaning.", accent: "teal" },
 ];
 
 export const questions: Question[] = [
@@ -99,6 +110,27 @@ export const questions: Question[] = [
   { id: 46, topic: "transit", prompt: "Before acetylene cutting during a painting assignment, what must be established?", choices: ["Only a color match", "Authorized hot-work controls, fire prevention, and trained operation", "An open solvent pail nearby", "A plastic drop cloth over sparks"], answer: 1, explanation: "Cutting is hot work. It requires authorization, area preparation, fire controls, suitable PPE, and trained personnel.", reference: "OSHA 29 CFR 1926 Subpart J / site hot-work procedure" },
   { id: 47, topic: "transit", prompt: "An airless hose is found with exposed reinforcement before work begins. The correct action is to:", choices: ["Wrap it with masking tape", "Remove it from service and replace it as required", "Increase pressure", "Hide the damaged section"], answer: 1, explanation: "High-pressure hose damage can lead to rupture or injection. Defective equipment must not be used.", reference: "Airless-equipment inspection guidance" },
   { id: 48, topic: "transit", prompt: "SEPTA’s Painter–First Class posting expects a painter to work from drawings and written instructions while also being able to:", choices: ["Ignore missing materials", "Problem-solve safely at the job site", "Alter transit service alone", "Bypass safety procedures"], answer: 1, explanation: "The role calls for independent problem-solving, clean work areas, and compliance with Authority safety and security procedures.", reference: "SEPTA Painter–First Class (1131) posting" },
+
+  { id: 49, topic: "defects", prompt: "What is the primary cause of 'alligatoring' in a paint film?", choices: ["Applying a hard coating over a soft or flexible one", "Too much ventilation during drying", "Using the wrong color tint", "Painting over a perfectly clean surface"], answer: 0, explanation: "Alligatoring (large cracking resembling reptile skin) usually occurs when a rigid topcoat is applied over a flexible or incompletely dried undercoat.", reference: "Coating Defects Guide" },
+  { id: 50, topic: "defects", prompt: "Amine blush on an epoxy coating looks like a greasy or cloudy film and can cause:", choices: ["Increased gloss", "Poor adhesion of the next coat", "Better rust resistance", "Faster curing times"], answer: 1, explanation: "Amine blush is a surface exudate formed when epoxy cures in cool, humid conditions. It must be washed off (usually with warm water) before recoating.", reference: "Industrial Coatings Troubleshooting" },
+  { id: 51, topic: "defects", prompt: "What is a 'holiday' in industrial painting?", choices: ["A scheduled break", "A missed spot or pinhole in the coating film", "A decorative technique", "A special type of primer"], answer: 1, explanation: "A holiday is a skip, miss, or pinhole in a paint film that exposes the substrate to potential corrosion.", reference: "SSPC Coating Terminology" },
+  { id: 52, topic: "defects", prompt: "Blistering in a newly applied coating on exterior masonry is most often caused by:", choices: ["Too many coats", "Moisture trapped beneath the film or migrating through the substrate", "Using an airless sprayer", "Painting in direct sunlight only"], answer: 1, explanation: "Moisture trapped behind a coating will expand as vapor, pushing the paint off the surface and forming blisters.", reference: "Masonry Finishes Guide" },
+  { id: 53, topic: "defects", prompt: "To fix 'flashing' (uneven sheen) on a newly painted drywall surface, you typically need to:", choices: ["Wash it with soap", "Apply another coat of finish, ensuring the surface was properly primed and sealed", "Sand it down to bare paper", "Use a glossy clear coat"], answer: 1, explanation: "Flashing occurs from uneven porosity (e.g., unprimed joint compound absorbing paint differently than the paper). Proper priming prevents it.", reference: "Architectural Painting Standards" },
+  { id: 54, topic: "defects", prompt: "If a waterborne acrylic coating is applied at temperatures below the manufacturer's recommendation, what is a likely result?", choices: ["It will dry much faster", "It may dry powdery or crack due to poor film formation", "It turns into an oil-based paint", "It increases its adhesion"], answer: 1, explanation: "Latex/acrylic paints need sufficient warmth for the polymer particles to fuse (coalesce). Cold prevents proper film formation.", reference: "Product Data Sheet Warnings" },
+
+  { id: 55, topic: "industrial", prompt: "A two-component polyurethane topcoat is typically chosen for its:", choices: ["Ability to be applied over rust", "Excellent UV resistance and color retention", "Water cleanup properties", "Low cost and ease of use"], answer: 1, explanation: "Aliphatic polyurethanes are the gold standard for exterior industrial topcoats because they resist UV degradation and chalking.", reference: "Industrial Topcoat Selection" },
+  { id: 56, topic: "industrial", prompt: "What does 'induction time' mean when mixing a two-part epoxy?", type: "multiple", choices: ["The time it takes to clean the tools", "The waiting period after mixing parts A and B before the coating can be applied", "The time it takes to dry to touch", "The shelf life of the unmixed cans"], answer: 1, explanation: "Many epoxies require an induction (or 'sweat-in') time for the chemical reaction to properly begin before application.", reference: "Manufacturer Technical Data" },
+  { id: 57, topic: "industrial", prompt: "When a specification calls for 'stripe coating', the painter must:", choices: ["Paint decorative stripes on the walls", "Brush extra paint onto edges, welds, and corners before the full coat is sprayed", "Use masking tape to create sharp lines", "Apply paint in alternating vertical and horizontal passes"], answer: 1, explanation: "Stripe coating builds thickness on sharp edges, welds, and crevices where spray application tends to draw thin.", reference: "SSPC-PA 1" },
+  { id: 58, topic: "industrial", prompt: "What happens if a mixed two-component coating exceeds its 'pot life'?", choices: ["It becomes fully cured in the bucket and cannot be used", "It simply needs more thinner", "It gets a better gloss", "It must be shaken vigorously to reuse"], answer: 0, explanation: "Pot life is the usable working time of a mixed multi-component product. Exceeding it means the chemical reaction has progressed too far, ruining the batch.", reference: "Coating Fundamentals" },
+  { id: 59, topic: "industrial", prompt: "Which type of coating cures by reacting with moisture in the air?", choices: ["Standard latex paint", "Moisture-cured urethane (MCU)", "Alkyd enamel", "Vinyl ester"], answer: 1, explanation: "Moisture-cured urethanes use ambient humidity to trigger their curing process, making them useful in damp or cold environments.", reference: "Specialty Industrial Coatings" },
+  { id: 60, topic: "industrial", prompt: "Zinc-rich primers are used on steel primarily to provide:", choices: ["A glossy finish", "Galvanic (cathodic) protection", "Wood rot prevention", "A soft, flexible base"], answer: 1, explanation: "Zinc dust in the primer sacrifices itself to protect the underlying steel from corrosion, similar to galvanizing.", reference: "Corrosion Protection Systems" },
+
+  { id: 61, topic: "prep-standards", prompt: "According to SSPC-SP 1, what must be done before any mechanical surface preparation begins?", choices: ["Abrasive blasting", "Removal of all visible oil, grease, dirt, and drawing compounds using solvents or detergents", "Applying a rust converter", "Hand wire brushing"], answer: 1, explanation: "Solvent Cleaning (SP 1) is a prerequisite to all other prep methods to ensure oils and grease are not driven deeper into the substrate.", reference: "SSPC-SP 1" },
+  { id: 62, topic: "prep-standards", prompt: "SSPC-SP 2 'Hand Tool Cleaning' requires the removal of:", choices: ["All old paint, even if tightly adhered", "Loose mill scale, loose rust, and loose paint", "Oil and grease only", "The microscopic profile of the steel"], answer: 1, explanation: "Hand Tool Cleaning removes only loose materials. Tightly adhered rust, mill scale, and paint can remain.", reference: "SSPC-SP 2" },
+  { id: 63, topic: "prep-standards", prompt: "What is the primary difference between SSPC-SP 2 (Hand Tool) and SSPC-SP 3 (Power Tool) cleaning?", choices: ["SP 3 removes all tightly adhered rust", "SP 3 uses powered equipment like grinders or needle guns to remove loose material more efficiently", "SP 2 is only for wood", "SP 3 requires water"], answer: 1, explanation: "Both standards only require the removal of loose material, but SP 3 uses power tools for speed and effectiveness.", reference: "SSPC-SP 3" },
+  { id: 64, topic: "prep-standards", prompt: "If a spec calls for a 'White Metal Blast' (SSPC-SP 5 / NACE 1), the final surface must be:", choices: ["Painted white immediately", "Free of all visible oil, grease, dirt, dust, mill scale, rust, and paint, appearing uniformly gray-white", "Blasted with white sand", "Lightly swept to remove loose rust"], answer: 1, explanation: "White Metal is the highest degree of blast cleaning, leaving absolutely no staining or previous coating on the steel.", reference: "SSPC-SP 5" },
+  { id: 65, topic: "prep-standards", prompt: "SSPC-SP 11 'Power Tool Cleaning to Bare Metal' differs from SP 3 because it requires:", choices: ["Less cleaning", "The removal of all visible rust and paint, plus the creation of a surface profile", "Only the use of wire brushes", "Wet blasting"], answer: 1, explanation: "Unlike SP 3, SP 11 requires a bare metal finish (similar to a Commercial Blast) and specifically requires producing a profile for coating adhesion.", reference: "SSPC-SP 11" },
+  { id: 66, topic: "prep-standards", prompt: "Why is a surface profile (anchor pattern) created during abrasive blasting?", choices: ["To make the steel look decorative", "To increase the surface area and provide mechanical 'teeth' for the coating to grip", "To make it easier to wash", "To reduce the amount of paint needed"], answer: 1, explanation: "A profile roughens the steel on a microscopic level, significantly improving the mechanical bond of industrial primers.", reference: "Surface Profile Theory" },
 ];
 
 export const practicalStations: PracticalStation[] = [
@@ -110,6 +142,57 @@ export const practicalStations: PracticalStation[] = [
   { id: "access", number: "06", title: "Access-equipment decision", time: "15 MIN", brief: "Choose and inspect safe access for an elevated task requiring tools and two-handed work.", checks: ["Identifies height and task demands", "Rejects damaged equipment", "Sets stable footing and access", "Includes required fall protection", "Protects the area below"] },
   { id: "takeoff", number: "07", title: "Drawing & material takeoff", time: "20 MIN", brief: "Read a simple plan, calculate net area, coats, gallons, and a stated waste allowance.", checks: ["Reads scale and notes", "Uses written dimensions", "Deducts openings correctly", "Applies coats and coverage", "Shows units and rounds purchase quantities"] },
   { id: "hazard", number: "08", title: "Hazard-recognition walk", time: "15 MIN", brief: "Review a simulated transit work zone and explain the controls needed before work begins.", checks: ["Protects public movement and egress", "Finds lead and respiratory concerns", "Finds ignition and hot-work hazards", "Finds ladder, scaffold, and hose hazards", "Explains stop-work and reporting steps"] },
+  { id: "respirator", number: "09", title: "Respirator inspection", time: "10 MIN", brief: "Perform a pre-use inspection and user seal check on a half-face elastomeric respirator.", checks: ["Checks straps and buckles for elasticity", "Inspects inhalation/exhalation valves", "Verifies correct cartridge selection", "Performs positive pressure seal check", "Performs negative pressure seal check"] },
+  { id: "rigging", number: "10", title: "Suspended access prep", time: "20 MIN", brief: "Identify required safety checks before utilizing a suspended scaffold or swing stage.", checks: ["Verifies independent fall arrest system", "Checks tiebacks and counterweights", "Inspects wire rope and hoists", "Confirms load capacity rating", "Establishes drop zone protection below"] },
+];
+
+export const libraryArticles: LibraryArticle[] = [
+  {
+    id: "defects",
+    category: "Troubleshooting",
+    title: "Common Coating Defects",
+    content: `
+      <h3>Alligatoring</h3>
+      <p>Looks like reptile skin. Caused by applying a hard, rigid topcoat over a soft, flexible, or incompletely dried undercoat. <strong>Fix:</strong> Scrape, sand to a sound substrate, prime, and repaint.</p>
+      
+      <h3>Blistering</h3>
+      <p>Bubbles in the paint film. Usually caused by moisture trapped behind the coating, or painting in direct hot sun causing the surface to dry too fast and trap solvent vapor. <strong>Fix:</strong> Remove the blisters, resolve the moisture source, and repaint.</p>
+
+      <h3>Flashing</h3>
+      <p>Uneven gloss or sheen across a surface. Often caused by painting over a porous surface without a primer (like bare drywall mud). <strong>Fix:</strong> Apply a proper sealer/primer to equalize porosity, then apply a new topcoat.</p>
+
+      <h3>Holidays</h3>
+      <p>Missed spots or pinholes in the coating. <strong>Fix:</strong> Use a holiday detector (sponge or spark test) on critical industrial jobs, and touch up missed areas.</p>
+    `
+  },
+  {
+    id: "prep",
+    category: "Standards",
+    title: "SSPC Surface Prep Basics",
+    content: `
+      <ul>
+        <li><strong>SP 1 - Solvent Cleaning:</strong> The essential first step. Removing visible oil, grease, and dirt using solvents or detergents. Must be done before any mechanical prep.</li>
+        <li><strong>SP 2 - Hand Tool Cleaning:</strong> Removing only <em>loose</em> rust, scale, and paint using hand wire brushes or scrapers.</li>
+        <li><strong>SP 3 - Power Tool Cleaning:</strong> Similar to SP 2, but using power tools (grinders, needle guns) to remove loose material faster.</li>
+        <li><strong>SP 11 - Power Tool to Bare Metal:</strong> Using power tools to remove <em>all</em> visible rust and paint, AND creating a surface profile for adhesion.</li>
+        <li><strong>SP 6 - Commercial Blast:</strong> Abrasive blasting to remove all paint and rust, leaving only slight staining (max 33% of the surface).</li>
+        <li><strong>SP 5 - White Metal Blast:</strong> The highest standard. 100% clean steel with no staining whatsoever. Used in severe immersion environments.</li>
+      </ul>
+    `
+  },
+  {
+    id: "compatibility",
+    category: "Systems",
+    title: "Coating Compatibility",
+    content: `
+      <p>Not all paints play nicely together. A professional must ensure the system is chemically compatible.</p>
+      <ul>
+        <li><strong>Hard over Soft:</strong> Never put a hard, high-tension coating (like a 2-part epoxy) over a soft, flexible coating (like a standard latex). The epoxy will pull the latex right off the wall (Alligatoring/Peeling).</li>
+        <li><strong>Hot over Cold:</strong> Applying 'hot' solvent paints (like urethanes or xylol-thinned epoxies) over old alkyds or latex can cause the old paint to wrinkle and lift as the strong solvents dissolve it.</li>
+        <li><strong>Alkyd over Zinc:</strong> Never apply traditional alkyd (oil-based) paints directly over zinc-rich primers or galvanized metal without an intermediate tie-coat. The alkyd will undergo <em>saponification</em>, turning into soap and peeling off.</li>
+      </ul>
+    `
+  }
 ];
 
 export const readinessItems = [

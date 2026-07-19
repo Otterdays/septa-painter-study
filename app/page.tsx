@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { practicalStations, questions, readinessItems, topics, type ProgressState, type Question, type StudyTopic } from "./data";
+import { practicalStations, questions, readinessItems, topics, libraryArticles, type ProgressState, type Question, type StudyTopic } from "./data";
 
 const defaultProgress: ProgressState = { bestScore: 0, answered: 0, stations: [], readiness: [] };
 
@@ -50,6 +50,9 @@ export default function Home() {
   const [ratioA, setRatioA] = useState("4");
   const [ratioB, setRatioB] = useState("1");
   const [batch, setBatch] = useState("5");
+  const [temperature, setTemperature] = useState("70");
+  const [humidity, setHumidity] = useState("50");
+  const [studyMode, setStudyMode] = useState(false);
 
   useEffect(() => {
     const saved = window.localStorage.getItem("painter1131-progress");
@@ -78,6 +81,12 @@ export default function Home() {
   const ratioTotal = safeNumber(ratioA) + safeNumber(ratioB);
   const componentA = ratioTotal ? safeNumber(batch) * safeNumber(ratioA) / ratioTotal : 0;
   const componentB = ratioTotal ? safeNumber(batch) * safeNumber(ratioB) / ratioTotal : 0;
+  
+  const t = safeNumber(temperature);
+  const rh = Math.max(0, Math.min(100, safeNumber(humidity)));
+  const dewPoint = t - (0.36 * (100 - rh));
+  const safeSurfaceTemp = dewPoint + 5;
+
   const current = activeQuestions[questionIndex];
   const topicLabel = selectedTopic === "all" ? "Full mixed drill" : topics.find((topic) => topic.id === selectedTopic)?.name ?? "Topic review";
   const answeredInDrill = finished ? activeQuestions.length : questionIndex;
@@ -146,7 +155,7 @@ export default function Home() {
     <main>
       <header className="topBar">
         <a className="logo" href="#top" aria-label="Coat Ready home"><span className="logoSwatch" />COAT<span>READY</span></a>
-        <nav aria-label="Primary navigation"><a href="#knowledge">Knowledge</a><a href="#drill">Practice exam</a><a href="#practical">Performance</a><a href="#calculator">Calculators</a></nav>
+        <nav aria-label="Primary navigation"><a href="#knowledge">Knowledge</a><a href="#drill">Practice exam</a><a href="#practical">Performance</a><a href="#calculator">Calculators</a><a href="#library">Library</a></nav>
         <button onClick={() => buildDrill("all")}>START DRILL <span>↗</span></button>
       </header>
 
@@ -191,7 +200,19 @@ export default function Home() {
         <div className="drillIntro">
           <span className="sectionTag">02 / PRACTICE EXAM</span><h2>Find the weak coat<br />before test day.</h2>
           <div className="drillStats"><div><strong>{progress.answered}</strong><span>TOTAL ANSWERED</span></div><div><strong>{progress.bestScore}/20</strong><span>BEST FULL DRILL</span></div></div>
-          <div className="topicSelect"><label htmlFor="topic-filter">DRILL MODE</label><select id="topic-filter" value={selectedTopic} onChange={(event) => chooseTopic(event.target.value)}><option value="all">Full mixed drill — 20</option>{topics.map((topic) => <option key={topic.id} value={topic.id}>{topic.name} — 6</option>)}</select></div>
+          <div className="topicSelect">
+            <label htmlFor="topic-filter">DRILL MODE</label>
+            <select id="topic-filter" value={selectedTopic} onChange={(event) => chooseTopic(event.target.value)}>
+              <option value="all">Full mixed drill — 20</option>
+              {topics.map((topic) => <option key={topic.id} value={topic.id}>{topic.name} — 6</option>)}
+            </select>
+          </div>
+          <div className="studyToggle">
+            <label>
+              <input type="checkbox" checked={studyMode} onChange={(e) => setStudyMode(e.target.checked)} />
+              <span>Study / Flashcard Mode</span>
+            </label>
+          </div>
           {selectedTopicData && <p className="focusNote"><b>Focused review:</b> {selectedTopicData.description}</p>}
         </div>
 
@@ -215,7 +236,18 @@ export default function Home() {
                 })}
               </div>
               {submitted && <div className={`explanation ${selectedAnswer === current.answer ? "good" : "review"}`}><span>{selectedAnswer === current.answer ? "CORRECT" : "REVIEW"}</span><p>{current.explanation}</p><b>{current.reference}</b></div>}
-              <div className="quizFooter"><span>Keyboard: 1–4 selects • Enter checks/continues</span>{submitted ? <button onClick={nextQuestion}>{questionIndex === activeQuestions.length - 1 ? "SEE RESULTS" : "NEXT QUESTION"} →</button> : <button disabled={selectedAnswer === null} onClick={checkAnswer}>CHECK ANSWER →</button>}</div>
+              <div className="quizFooter">
+                <span>Keyboard: 1–4 selects • Enter checks/continues</span>
+                {submitted ? (
+                  <button onClick={nextQuestion}>{questionIndex === activeQuestions.length - 1 ? "SEE RESULTS" : "NEXT QUESTION"} →</button>
+                ) : (
+                  studyMode ? (
+                    <button onClick={() => { setSelectedAnswer(current.answer); setSubmitted(true); }}>SHOW ANSWER →</button>
+                  ) : (
+                    <button disabled={selectedAnswer === null} onClick={checkAnswer}>CHECK ANSWER →</button>
+                  )
+                )}
+              </div>
             </>
           )}
         </div>
@@ -246,11 +278,36 @@ export default function Home() {
             <div className="mixVisual"><div style={{ flex: safeNumber(ratioA) || 1 }}><span>PART A</span><strong>{componentA.toFixed(2)} GAL</strong></div><div style={{ flex: safeNumber(ratioB) || 1 }}><span>PART B</span><strong>{componentB.toFixed(2)} GAL</strong></div></div>
             <p>Training calculator only. The current product data sheet controls ratio, units, induction time, pot life, and permitted thinning.</p>
           </article>
+          <article className="calculatorCard">
+            <div className="calcLabel"><span>C</span><b>ENVIRONMENTAL</b></div>
+            <div className="inputGrid">
+              <label>Ambient Temp (°F)<input inputMode="decimal" value={temperature} onChange={(e) => setTemperature(e.target.value)} /></label>
+              <label>Relative Humidity (%)<input inputMode="decimal" value={humidity} onChange={(e) => setHumidity(e.target.value)} /></label>
+            </div>
+            <div className="calcResult">
+              <div><span>DEW POINT</span><strong>{dewPoint.toFixed(1)} <small>°F</small></strong></div>
+              <div><span>MIN SURFACE TEMP</span><strong>{safeSurfaceTemp.toFixed(1)} <small>°F</small></strong></div>
+            </div>
+            <p>Surface temperature must be at least 5°F above the dew point to safely apply coatings without moisture interference.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="librarySection" id="library">
+        <div className="sectionTitle split"><span>05 / REFERENCE LIBRARY</span><h2>Knowledge<br />Base.</h2><p>Quick reference guides for common coating defects, surface preparation standards, and system compatibility.</p></div>
+        <div className="libraryGrid">
+          {libraryArticles.map(article => (
+            <article key={article.id} className="libraryCard">
+              <div className="libCategory">{article.category}</div>
+              <h3>{article.title}</h3>
+              <div className="libContent" dangerouslySetInnerHTML={{ __html: article.content }} />
+            </article>
+          ))}
         </div>
       </section>
 
       <section className="readinessSection" id="readiness">
-        <div className="readinessIntro"><span>05 / APPLICATION READINESS</span><h2>Bring proof.<br />Bring the trade.</h2><p>The job posting expects documented experience and practical independence—not entry-level familiarity.</p><div className="readinessMeter"><i style={{ width: `${(progress.readiness.length / readinessItems.length) * 100}%` }} /><span>{progress.readiness.length}/{readinessItems.length}</span></div></div>
+        <div className="readinessIntro"><span>06 / APPLICATION READINESS</span><h2>Bring proof.<br />Bring the trade.</h2><p>The job posting expects documented experience and practical independence—not entry-level familiarity.</p><div className="readinessMeter"><i style={{ width: `${(progress.readiness.length / readinessItems.length) * 100}%` }} /><span>{progress.readiness.length}/{readinessItems.length}</span></div></div>
         <div className="readinessList">{readinessItems.map((item, index) => <label key={item} className={progress.readiness.includes(index) ? "checked" : ""}><input type="checkbox" checked={progress.readiness.includes(index)} onChange={() => toggleReadiness(index)} /><span>{progress.readiness.includes(index) ? "✓" : String(index + 1).padStart(2, "0")}</span><p>{item}</p></label>)}</div>
       </section>
 
