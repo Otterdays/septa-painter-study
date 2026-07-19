@@ -13,7 +13,8 @@ const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 
 const localBindingConfig = {
   main: "./worker/index.ts",
-  compatibility_flags: ["nodejs_compat"],
+  // nodejs_compat lives only in wrangler.jsonc — duplicating it here
+  // makes Cloudflare reject deploy with "flag specified multiple times".
   d1_databases: d1
     ? [
         {
